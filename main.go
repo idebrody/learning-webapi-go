@@ -5,7 +5,10 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"net"
 	"net/http"
+	"os"
+	"runtime"
 	"strconv"
 	"time"
 
@@ -13,6 +16,12 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
+// cover aritmetics functions
+type arithmetics func(num1 float64, num2 float64) float64
+
+var GoroutineTreshold int
+
+// Print the documentation
 func get(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -23,10 +32,7 @@ func get(w http.ResponseWriter, r *http.Request) {
 func sendParsingError(w http.ResponseWriter, qParam string) {
 	w.WriteHeader(http.StatusBadRequest)
 	w.Write([]byte(fmt.Sprintf(`{"error": "Invalid number: %s"}`, qParam)))
-
 }
-
-type arithmetics func(num1 float64, num2 float64) float64
 
 func add(num1 float64, num2 float64) float64 {
 	return num1 + num2
@@ -97,29 +103,64 @@ func random(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(resultJson))
 }
 
+// https://github.com/heptiolabs/healthcheck/blob/master/checks.go
+func GoroutineCountCheck() error {
+	count := runtime.NumGoroutine()
+	if count > GoroutineTreshold {
+		return fmt.Errorf("too many goroutines (%d > %d)", count, GoroutineTreshold)
+	}
+	return nil
+}
+
 func liveness(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+	err := GoroutineCountCheck()
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusServiceUnavailable)
+		w.Write([]byte(fmt.Sprintf(`{"error": "%s"}`, err)))
+		return
+	}
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(`{"status": "UP"}`))
 }
 
 // Not sure if there is any readyness check I could do with the go module to be honest,
 // so this is basically the same as the liveness
 func readiness(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+	timeout := 1 * time.Second
+	conn, err := net.DialTimeout("tcp", "localhost:8080", timeout)
+	defer conn.Close()
+	if err != nil {
+		//log.Println("Site unreachable, error: ", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(`{"status": "ready"}`))
 }
 
 func notSupported(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusNotImplemented)
-	w.Write([]byte(`{"message": "not supported method"}`))
+	w.WriteHeader(http.StatusMethodNotAllowed)
+	w.Write([]byte(`{"message": "only GET is allowed"}`))
+}
+
+// golan init function
+func init() {
+	var gTresholdStr = os.Getenv("GOROUTINETRESHOLD")
+	if gTresholdStr == "" {
+		GoroutineTreshold = 100
+	} else {
+		var err error
+		GoroutineTreshold, err = strconv.Atoi(os.Getenv("GOROUTINETRESHOLD"))
+		if err != nil {
+			log.Fatal(fmt.Sprintf(`{"error": "%s"}`, err))
+		}
+	}
 }
 
 func main() {
 	r := mux.NewRouter()
 	api := r.PathPrefix("/api/v1").Subrouter()
+
 	api.HandleFunc("/", get).Methods(http.MethodGet)
 	api.HandleFunc("/add", func(w http.ResponseWriter, r *http.Request) { math(w, r, add) }).Methods(http.MethodGet)
 	api.HandleFunc("/substract", func(w http.ResponseWriter, r *http.Request) { math(w, r, substract) }).Methods(http.MethodGet)
@@ -127,8 +168,8 @@ func main() {
 	api.HandleFunc("/random", random).Methods(http.MethodGet)
 	// Using the The official Golang Prometheus library, not sure if that defeats the point of the exercise ¯\_(ツ)_/¯
 	r.Path("/metrics").Handler(promhttp.Handler())
-	r.HandleFunc("/readiness", readiness).Methods(http.MethodGet)
 	r.HandleFunc("/liveness", liveness).Methods(http.MethodGet)
+	r.HandleFunc("/readiness", readiness).Methods(http.MethodGet)
 	api.HandleFunc("/", notSupported)
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
