@@ -11,25 +11,40 @@ type response struct {
 	Result float64 `json:"result"`
 }
 
-func TestAdd(t *testing.T) {
-	req := httptest.NewRequest(http.MethodGet, "/add?num1=3.14&num2=1.414", nil)
+func performRequest(h http.HandlerFunc, path string) *httptest.ResponseRecorder {
+	req := httptest.NewRequest(http.MethodGet, path, nil)
 	rr := httptest.NewRecorder()
+	h.ServeHTTP(rr, req)
+	return rr
+}
 
+func assertEqual(expected float64, received float64, t *testing.T) {
+	if expected != received {
+		t.Errorf("Incorrect result: got %v want %v",
+			received, expected)
+	}
+}
+
+func assertStatus(expected int, received int, t *testing.T) {
+	if expected != received {
+		t.Errorf("Incorret status code: got %v want %v",
+			received, expected)
+	}
+}
+
+func TestAdd(t *testing.T) {
+	// Add handler
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { math(w, r, add) })
-	handler.ServeHTTP(rr, req)
+
+	rr := performRequest(handler, "/add?num1=3.14&num2=1.414")
+	wantStatus := http.StatusOK
+	var want float64 = 4.554
 
 	// Check Status code
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("wrong status code: got %v want %v",
-			status, http.StatusOK)
-	}
+	assertStatus(wantStatus, rr.Code, t)
 
 	// Check the result
-	var expected float64 = 4.554
 	var resp response
 	json.Unmarshal([]byte(rr.Body.String()), &resp)
-	if expected != resp.Result {
-		t.Errorf("Incorrect result: got %v want %v",
-			resp.Result, expected)
-	}
+	assertEqual(want, resp.Result, t)
 }
