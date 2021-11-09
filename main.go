@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"math/rand"
@@ -17,7 +18,7 @@ import (
 )
 
 // cover aritmetics functions
-type arithmetics func(num1 float64, num2 float64) float64
+type arithmetics func(num1 float64, num2 float64) (float64, error)
 
 var GoroutineTreshold int
 
@@ -34,17 +35,19 @@ func sendParsingError(w http.ResponseWriter, qParam string) {
 	w.Write([]byte(fmt.Sprintf(`{"error": "Invalid number: %s"}`, qParam)))
 }
 
-func add(num1 float64, num2 float64) float64 {
-	return num1 + num2
+func add(num1 float64, num2 float64) (float64, error) {
+	return num1 + num2, nil
 }
 
-func substract(num1 float64, num2 float64) float64 {
-	return num1 - num2
+func substract(num1 float64, num2 float64) (float64, error) {
+	return num1 - num2, nil
 }
 
-func division(num1 float64, num2 float64) float64 {
-	//TODO: handle zero division
-	return num1 / num2
+func division(num1 float64, num2 float64) (float64, error) {
+	if num2 == 0 {
+		return 0, errors.New("Division by Zero")
+	}
+	return num1 / num2, nil
 }
 
 func math(w http.ResponseWriter, r *http.Request, fn arithmetics) {
@@ -64,9 +67,15 @@ func math(w http.ResponseWriter, r *http.Request, fn arithmetics) {
 		return
 	}
 
+	retVal, err := fn(num1, num2)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(fmt.Sprintf(`{"error": "%s"}`, err)))
+		return
+	}
 	w.WriteHeader(http.StatusOK)
 	// trying to avoid trailing zeros
-	w.Write([]byte(fmt.Sprintf(`{"result": %s}`, strconv.FormatFloat(fn(num1, num2), 'f', -1, 64))))
+	w.Write([]byte(fmt.Sprintf(`{"result": %s}`, strconv.FormatFloat(retVal, 'f', -1, 64))))
 }
 
 func random(w http.ResponseWriter, r *http.Request) {
