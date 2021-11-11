@@ -27,10 +27,6 @@ paths:
           description: Bad Request
           schema:
             type: object
-        "404":
-          description: Not Found
-          schema:
-            type: object
       summary: Adding numbers
       tags:
       - add
@@ -106,15 +102,11 @@ paths:
         type: number
       responses:
         "200":
-          description: OK
+          description: '{"result": 4 }'
           schema:
             type: object
         "400":
           description: Bad Request
-          schema:
-            type: object
-        "404":
-          description: Not Found
           schema:
             type: object
       summary: Substracting numbers

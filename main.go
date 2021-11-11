@@ -2,7 +2,6 @@ package main
 
 // @title User API documentation
 // @version 1.0.0
-// @host go-web-api.dev.engineering.somecompany.cloud:8888
 // @BasePath /api/v1
 
 import (
@@ -52,7 +51,7 @@ func sendParsingError(w http.ResponseWriter, qParam string) {
 // @Param num1 query float64 true "first number"
 // @Param num2 query float64 true "second number"
 // @Success 200 {object} object
-// @Failure 400,404 {object} object
+// @Failure 400 {object} object
 // @Router /add [get]
 func add(num1 float64, num2 float64) (float64, error) {
 	return num1 + num2, nil
@@ -65,7 +64,7 @@ func add(num1 float64, num2 float64) (float64, error) {
 // @Param num1 query float64 true "first number"
 // @Param num2 query float64 true "second number"
 // @Success 200 {object} object
-// @Failure 400,404 {object} object
+// @Failure 400 {object} object
 // @Router /substract [get]
 func substract(num1 float64, num2 float64) (float64, error) {
 	return num1 - num2, nil
@@ -192,6 +191,10 @@ func readiness(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+func opendocs(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/docs/", 301)
+}
+
 func notSupported(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusMethodNotAllowed)
@@ -221,7 +224,8 @@ func main() {
 	api.HandleFunc("/division", func(w http.ResponseWriter, r *http.Request) { math(w, r, division) }).Methods(http.MethodGet)
 	api.HandleFunc("/random", random).Methods(http.MethodGet)
 	// Using the The official Golang Prometheus library, not sure if that defeats the point of the exercise ¯\_(ツ)_/¯
-	r.PathPrefix("/documentation/").Handler(httpSwagger.WrapHandler)
+	r.HandleFunc("/", opendocs).Methods(http.MethodGet)
+	r.PathPrefix("/docs/").Handler(httpSwagger.WrapHandler)
 	r.Path("/metrics").Handler(promhttp.Handler())
 	r.HandleFunc("/liveness", liveness).Methods(http.MethodGet)
 	r.HandleFunc("/readiness", readiness).Methods(http.MethodGet)

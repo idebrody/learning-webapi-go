@@ -58,12 +58,6 @@ var doc = `{
                         "schema": {
                             "type": "object"
                         }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "type": "object"
-                        }
                     }
                 }
             }
@@ -178,19 +172,13 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "{\"result\": 4 }",
                         "schema": {
                             "type": "object"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
-                        "schema": {
-                            "type": "object"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
                         "schema": {
                             "type": "object"
                         }
