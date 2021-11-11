@@ -5,7 +5,6 @@
         "contact": {},
         "version": "1.0.0"
     },
-    "host": "go-web-api.dev.engineering.somecompany.cloud:8888",
     "basePath": "/api/v1",
     "paths": {
         "/add": {

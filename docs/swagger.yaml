@@ -1,5 +1,4 @@
 basePath: /api/v1
-host: go-web-api.dev.engineering.somecompany.cloud:8888
 info:
   contact: {}
   title: User API documentation
