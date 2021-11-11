@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"math/big"
 	"math/rand"
 	"net"
 	"net/http"
@@ -74,8 +75,9 @@ func math(w http.ResponseWriter, r *http.Request, fn arithmetics) {
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	// trying to avoid trailing zeros
-	w.Write([]byte(fmt.Sprintf(`{"result": %s}`, strconv.FormatFloat(retVal, 'f', -1, 64))))
+	// Doing some precision rounding
+	// ToDo: might have been better if I used the math/big from the start
+	w.Write([]byte(fmt.Sprintf(`{"result": %s}`, big.NewFloat(retVal).String())))
 }
 
 func random(w http.ResponseWriter, r *http.Request) {
