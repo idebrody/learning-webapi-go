@@ -50,7 +50,7 @@ spec:
         ports:
         - containerPort: 8080
           name: http
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
 ---
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
