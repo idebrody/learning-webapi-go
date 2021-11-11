@@ -22,9 +22,9 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	_ "idebrody/learning-webapi-go/docs"
+	_ "github.com/idebrody/learning-webapi-go/docs"
 
-	"github.com/swaggo/http-swagger"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 // cover aritmetics functions
@@ -221,10 +221,11 @@ func main() {
 	api.HandleFunc("/division", func(w http.ResponseWriter, r *http.Request) { math(w, r, division) }).Methods(http.MethodGet)
 	api.HandleFunc("/random", random).Methods(http.MethodGet)
 	// Using the The official Golang Prometheus library, not sure if that defeats the point of the exercise ¯\_(ツ)_/¯
-	r.HandleFunc("/", apidoc).Methods(http.MethodGet)
+	r.PathPrefix("/documentation/").Handler(httpSwagger.WrapHandler)
 	r.Path("/metrics").Handler(promhttp.Handler())
 	r.HandleFunc("/liveness", liveness).Methods(http.MethodGet)
 	r.HandleFunc("/readiness", readiness).Methods(http.MethodGet)
 	api.HandleFunc("/", notSupported)
 	log.Fatal(http.ListenAndServe(":8080", r))
+
 }

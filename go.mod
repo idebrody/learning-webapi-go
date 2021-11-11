@@ -1,4 +1,4 @@
-module api-test
+module learning-webapi-go
 
 go 1.17
 
