@@ -24,7 +24,7 @@ spec:
         image: idebrody/go-web-api
         env:
         - name: GOROUTINETRESHOLD
-          value: 150
+          value: "150"
         resources:
           requests:
             memory: "512Mi"
