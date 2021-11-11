@@ -1,5 +1,10 @@
 package main
 
+// @title User API documentation
+// @version 1.0.0
+// @host go-web-api.dev.engineering.somecompany.cloud:8888
+// @BasePath /api/v1
+
 import (
 	"encoding/json"
 	"errors"
@@ -16,6 +21,10 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+
+	_ "idebrody/learning-webapi-go/docs"
+
+	"github.com/swaggo/http-swagger"
 )
 
 // cover aritmetics functions
@@ -36,14 +45,41 @@ func sendParsingError(w http.ResponseWriter, qParam string) {
 	w.Write([]byte(fmt.Sprintf(`{"error": "Invalid number: %s"}`, qParam)))
 }
 
+// add ... Add two numbers together
+// @Summary Adding numbers
+// @Description Take two numbers and add them together
+// @Tags add
+// @Param num1 query float64 true "first number"
+// @Param num2 query float64 true "second number"
+// @Success 200 {object} object
+// @Failure 400,404 {object} object
+// @Router /add [get]
 func add(num1 float64, num2 float64) (float64, error) {
 	return num1 + num2, nil
 }
 
+// substract ... Substract two numbers
+// @Summary Substracting numbers
+// @Description Take two real numbers and return the result of subtracting them
+// @Tags substract
+// @Param num1 query float64 true "first number"
+// @Param num2 query float64 true "second number"
+// @Success 200 {object} object
+// @Failure 400,404 {object} object
+// @Router /substract [get]
 func substract(num1 float64, num2 float64) (float64, error) {
 	return num1 - num2, nil
 }
 
+// division ... Divide two numbers together
+// @Summary Divide numbers
+// @Description Divide two numbers, return the result
+// @Tags division
+// @Param num1 query float64 true "first number"
+// @Param num2 query float64 true "second number"
+// @Success 200 {object} object
+// @Failure 400,404 {object} object
+// @Router /division [get]
 func division(num1 float64, num2 float64) (float64, error) {
 	if num2 == 0 {
 		return 0, errors.New("Division by Zero")
@@ -80,6 +116,14 @@ func math(w http.ResponseWriter, r *http.Request, fn arithmetics) {
 	w.Write([]byte(fmt.Sprintf(`{"result": %s}`, big.NewFloat(retVal).String())))
 }
 
+// random ... Return random numbers
+// @Summary Get random numbers
+// @Description Get random numbers
+// @Tags random
+// @Param Count query int false "Amount of random numbers to return"
+// @Success 200 {array} int
+// @Failure 400,404 {object} object
+// @Router /random [get]
 func random(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	countStr := r.URL.Query().Get("Count")

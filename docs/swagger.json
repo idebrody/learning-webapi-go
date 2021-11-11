@@ -1,0 +1,187 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "User API documentation",
+        "contact": {},
+        "version": "1.0.0"
+    },
+    "host": "go-web-api.dev.engineering.somecompany.cloud:8888",
+    "basePath": "/api/v1",
+    "paths": {
+        "/add": {
+            "get": {
+                "description": "Take two numbers and add them together",
+                "tags": [
+                    "add"
+                ],
+                "summary": "Adding numbers",
+                "parameters": [
+                    {
+                        "type": "number",
+                        "description": "first number",
+                        "name": "num1",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "number",
+                        "description": "second number",
+                        "name": "num2",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/division": {
+            "get": {
+                "description": "Divide two numbers, return the result",
+                "tags": [
+                    "division"
+                ],
+                "summary": "Divide numbers",
+                "parameters": [
+                    {
+                        "type": "number",
+                        "description": "first number",
+                        "name": "num1",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "number",
+                        "description": "second number",
+                        "name": "num2",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/random": {
+            "get": {
+                "description": "Get random numbers",
+                "tags": [
+                    "random"
+                ],
+                "summary": "Get random numbers",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Amount of random numbers to return",
+                        "name": "Count",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/substract": {
+            "get": {
+                "description": "Take two real numbers and return the result of subtracting them",
+                "tags": [
+                    "substract"
+                ],
+                "summary": "Substracting numbers",
+                "parameters": [
+                    {
+                        "type": "number",
+                        "description": "first number",
+                        "name": "num1",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "number",
+                        "description": "second number",
+                        "name": "num2",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

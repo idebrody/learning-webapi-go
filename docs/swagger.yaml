@@ -1,0 +1,124 @@
+basePath: /api/v1
+host: go-web-api.dev.engineering.somecompany.cloud:8888
+info:
+  contact: {}
+  title: User API documentation
+  version: 1.0.0
+paths:
+  /add:
+    get:
+      description: Take two numbers and add them together
+      parameters:
+      - description: first number
+        in: query
+        name: num1
+        required: true
+        type: number
+      - description: second number
+        in: query
+        name: num2
+        required: true
+        type: number
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            type: object
+      summary: Adding numbers
+      tags:
+      - add
+  /division:
+    get:
+      description: Divide two numbers, return the result
+      parameters:
+      - description: first number
+        in: query
+        name: num1
+        required: true
+        type: number
+      - description: second number
+        in: query
+        name: num2
+        required: true
+        type: number
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            type: object
+      summary: Divide numbers
+      tags:
+      - division
+  /random:
+    get:
+      description: Get random numbers
+      parameters:
+      - description: Amount of random numbers to return
+        in: query
+        name: Count
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: integer
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            type: object
+      summary: Get random numbers
+      tags:
+      - random
+  /substract:
+    get:
+      description: Take two real numbers and return the result of subtracting them
+      parameters:
+      - description: first number
+        in: query
+        name: num1
+        required: true
+        type: number
+      - description: second number
+        in: query
+        name: num2
+        required: true
+        type: number
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            type: object
+      summary: Substracting numbers
+      tags:
+      - substract
+swagger: "2.0"
