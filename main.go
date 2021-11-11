@@ -24,7 +24,7 @@ type arithmetics func(num1 float64, num2 float64) (float64, error)
 var GoroutineTreshold int
 
 // Print the documentation
-func get(w http.ResponseWriter, r *http.Request) {
+func apidoc(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(`{"message": "get called"}`))
@@ -172,12 +172,12 @@ func main() {
 	r := mux.NewRouter()
 	api := r.PathPrefix("/api/v1").Subrouter()
 
-	api.HandleFunc("/", get).Methods(http.MethodGet)
 	api.HandleFunc("/add", func(w http.ResponseWriter, r *http.Request) { math(w, r, add) }).Methods(http.MethodGet)
 	api.HandleFunc("/substract", func(w http.ResponseWriter, r *http.Request) { math(w, r, substract) }).Methods(http.MethodGet)
 	api.HandleFunc("/division", func(w http.ResponseWriter, r *http.Request) { math(w, r, division) }).Methods(http.MethodGet)
 	api.HandleFunc("/random", random).Methods(http.MethodGet)
 	// Using the The official Golang Prometheus library, not sure if that defeats the point of the exercise ¯\_(ツ)_/¯
+	r.HandleFunc("/", apidoc).Methods(http.MethodGet)
 	r.Path("/metrics").Handler(promhttp.Handler())
 	r.HandleFunc("/liveness", liveness).Methods(http.MethodGet)
 	r.HandleFunc("/readiness", readiness).Methods(http.MethodGet)
