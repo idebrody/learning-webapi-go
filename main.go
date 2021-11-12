@@ -177,8 +177,8 @@ func liveness(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-// Not sure if there is any readyness check I could do with the go module to be honest,
-// so this is basically the same as the liveness
+// Not sure if there is any readiness check I could do with the go module to be honest,
+// so just implemented port check
 func readiness(w http.ResponseWriter, r *http.Request) {
 	timeout := 1 * time.Second
 	conn, err := net.DialTimeout("tcp", "localhost:8080", timeout)
