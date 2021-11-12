@@ -59,33 +59,50 @@ kubectl apply -n idebrody -f kubernetes/go-web-api-nginx.yaml
 
 # Availabe Endpoints and Examples
 
+Assuming you are running the service on your localhost:8080
 
 **Documentation**
-http://go-web-api.dev.engineering.somecompany.cloud/docs/
+
+http://localhost:8080/docs/
 
 **ADD**
+
 Add together 2 numbers
-http://go-web-api.dev.engineering.somecompany.cloud/api/v1/add?num1=13&num2=3.1415926
+
+http://localhost:8080/api/v1/add?num1=13&num2=3.1415926
 
 **Division**
+
 Divide 2 numbers
-http://go-web-api.dev.engineering.somecompany.cloud/api/v1/division?num1=9.27&num2=3
+
+http://localhost:8080/api/v1/division?num1=9.27&num2=3
 
 **Random**
+
 Generate 23 random numbers, default is 10
-http://go-web-api.dev.engineering.somecompany.cloud/api/v1/random?Count=23
+
+http://localhost:8080/api/v1/random?Count=23
 
 **Substract**
-http://go-web-api.dev.engineering.somecompany.cloud/api/v1/substract?num1=9&num2=1.414
+
+Substract 2 numbers
+
+http://localhost:8080/api/v1/substract?num1=9&num2=1.414
 
 **Metrics**
+
 Prometheus metrics
-http://go-web-api.dev.engineering.somecompany.cloud/metrics
+
+http://localhost:8080/metrics
 
 **Liveliness**
-It has not output only return StatusOK or StatusInternalServerError
-http://go-web-api.dev.engineering.somecompany.cloud/liveness
+
+It has no output it only returns StatusOK or StatusInternalServerError
+
+http://localhost:8080/liveness
 
 **Readiness**
-It has not output only return StatusOK or StatusInternalServerError
-http://go-web-api.dev.engineering.somecompany.cloud/readiness
+
+It has no output it only returns StatusOK or StatusInternalServerError
+
+http://localhost:8080/readiness
