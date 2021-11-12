@@ -21,7 +21,7 @@ go test -v
 ```
 or with a docker image
 ```
-docker run -v ${PWD}:/testme  golang:1.17-buster bash -c "cd /testme && go test -v "
+docker run --rm -v ${PWD}:/testme  golang:1.17-buster bash -c "cd /testme && go test -v"
 ```
 
 # Building
